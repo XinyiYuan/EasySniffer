@@ -6,139 +6,103 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>1280</width>
+    <height>681</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="Line" name="line">
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>7</x>
-      <y>50</y>
-      <width>781</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
-   </widget>
-   <widget class="QTableWidget" name="tableWidget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>70</y>
-      <width>781</width>
-      <height>192</height>
-     </rect>
-    </property>
-    <column>
-     <property name="text">
-      <string>协议</string>
-     </property>
-    </column>
-    <column>
-     <property name="text">
-      <string>内容</string>
-     </property>
-    </column>
-   </widget>
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>360</x>
+      <x>21</x>
       <y>10</y>
-      <width>113</width>
-      <height>32</height>
+      <width>1201</width>
+      <height>51</height>
      </rect>
     </property>
-    <property name="text">
-     <string>Start</string>
-    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLineEdit" name="filterText">
+       <property name="text">
+        <string>filter:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="startButton">
+       <property name="text">
+        <string>Start</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="stopButton">
+       <property name="text">
+        <string>Stop</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="resetButton">
+       <property name="text">
+        <string>Reset</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>550</x>
-      <y>10</y>
-      <width>113</width>
-      <height>32</height>
+      <x>11</x>
+      <y>71</y>
+      <width>1211</width>
+      <height>531</height>
      </rect>
     </property>
-    <property name="text">
-     <string>Stop</string>
-    </property>
-   </widget>
-   <widget class="Line" name="line_2">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>270</y>
-      <width>781</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
-   </widget>
-   <widget class="QScrollBar" name="verticalScrollBar">
-    <property name="geometry">
-     <rect>
-      <x>770</x>
-      <y>100</y>
-      <width>16</width>
-      <height>160</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Vertical</enum>
-    </property>
-   </widget>
-   <widget class="QPlainTextEdit" name="plainTextEdit">
-    <property name="geometry">
-     <rect>
-      <x>50</x>
-      <y>0</y>
-      <width>201</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="plainText">
-     <string>filter:</string>
-    </property>
-   </widget>
-   <widget class="QListWidget" name="listWidget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>300</y>
-      <width>751</width>
-      <height>221</height>
-     </rect>
-    </property>
-    <item>
-     <property name="text">
-      <string>内容</string>
-     </property>
-    </item>
-   </widget>
-   <widget class="QScrollBar" name="verticalScrollBar_2">
-    <property name="geometry">
-     <rect>
-      <x>730</x>
-      <y>340</y>
-      <width>16</width>
-      <height>160</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Vertical</enum>
-    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QTableWidget" name="packetList">
+       <column>
+        <property name="text">
+         <string>源结点</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>目标结点</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>协议</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>长度</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>内容</string>
+        </property>
+       </column>
+      </widget>
+     </item>
+     <item>
+      <widget class="QListWidget" name="packetInfo">
+       <item>
+        <property name="text">
+         <string>内容</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -146,7 +110,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1280</width>
      <height>24</height>
     </rect>
    </property>
@@ -154,5 +118,38 @@
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>resetButton</sender>
+   <signal>clicked()</signal>
+   <receiver>packetList</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>728</x>
+     <y>54</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>663</x>
+     <y>126</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>resetButton</sender>
+   <signal>clicked()</signal>
+   <receiver>packetInfo</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>746</x>
+     <y>69</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>741</x>
+     <y>384</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
