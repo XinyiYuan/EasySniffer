@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
+ <author>ShawnYuan</author>
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
   <property name="geometry">
@@ -14,12 +15,12 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>21</x>
       <y>10</y>
-      <width>1201</width>
+      <width>1241</width>
       <height>51</height>
      </rect>
     </property>
@@ -54,53 +55,62 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QTableWidget" name="packetList">
     <property name="geometry">
      <rect>
-      <x>11</x>
-      <y>71</y>
-      <width>1211</width>
-      <height>531</height>
+      <x>12</x>
+      <y>72</y>
+      <width>1251</width>
+      <height>311</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
+    <column>
+     <property name="text">
+      <string>source</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>destination</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Protocol</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Length</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Content</string>
+     </property>
+    </column>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>390</y>
+      <width>1251</width>
+      <height>241</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QTableWidget" name="packetList">
+      <widget class="QTreeWidget" name="packetOverview">
        <column>
         <property name="text">
-         <string>源结点</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>目标结点</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>协议</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>长度</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>内容</string>
+         <string notr="true">Packet Overview</string>
         </property>
        </column>
       </widget>
      </item>
      <item>
-      <widget class="QListWidget" name="packetInfo">
-       <item>
-        <property name="text">
-         <string>内容</string>
-        </property>
-       </item>
-      </widget>
+      <widget class="QTextEdit" name="packetContent"/>
      </item>
     </layout>
    </widget>
@@ -122,32 +132,48 @@
   <connection>
    <sender>resetButton</sender>
    <signal>clicked()</signal>
-   <receiver>packetList</receiver>
+   <receiver>packetOverview</receiver>
    <slot>clear()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>728</x>
-     <y>54</y>
+     <x>1261</x>
+     <y>74</y>
     </hint>
     <hint type="destinationlabel">
-     <x>663</x>
-     <y>126</y>
+     <x>465</x>
+     <y>415</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>resetButton</sender>
    <signal>clicked()</signal>
-   <receiver>packetInfo</receiver>
+   <receiver>packetContent</receiver>
    <slot>clear()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>746</x>
-     <y>69</y>
+     <x>1261</x>
+     <y>74</y>
     </hint>
     <hint type="destinationlabel">
-     <x>741</x>
-     <y>384</y>
+     <x>1259</x>
+     <y>415</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>resetButton</sender>
+   <signal>clicked()</signal>
+   <receiver>packetList</receiver>
+   <slot>clearContents()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1194</x>
+     <y>54</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1132</x>
+     <y>133</y>
     </hint>
    </hints>
   </connection>

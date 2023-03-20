@@ -3,9 +3,10 @@ from queue import Queue
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtWidgets import QTableWidgetItem as QTItem
+from PyQt5.QtWidgets import QTreeWidgetItem as QRItem
 from scapy.all import *
-from scapy.all import IP
 from scapy.arch.common import compile_filter
+from scapy.utils import hexdump
 
 from pages import mainpage
 
@@ -36,6 +37,19 @@ class MainPage(QMainWindow):
         self.showPacketSig = Signal()
         self.showPacketSig.recv.connect(self.showPacket)
 
+        # select a cell in packetList
+        # then display the content of each layer
+        # in packetOverview (treeWidget)
+        # similar to packet.show()
+        self.ui.packetList.cellClicked.connect(self.loadOverview)
+
+        # select an item in packetOverview
+        # then display the original hexadecimal content of the selected layer
+        # in packetContent (QTextEdit)
+        self.ui.packetOverview.itemClicked.connect(self.loadContent)
+
+        self.ui.packetContent.setPlaceholderText("Packet Content")
+
         self.sniffer = None
         self.queue = Queue()
 
@@ -53,11 +67,9 @@ class MainPage(QMainWindow):
 
         try:
             compile_filter(filter_exp=filter)
-            # 输入框背景变绿
             self.ui.filterText.setStyleSheet('QLineEdit { background-color: rgb(33, 186, 69);}')
             self.ui.startButton.setEnabled(True)
         except Exception:
-            # 将输入框背景变红
             self.ui.startButton.setEnabled(False)
             self.ui.filterText.setStyleSheet('QLineEdit { background-color: rgb(219, 40, 40);}')
             return
@@ -72,25 +84,23 @@ class MainPage(QMainWindow):
         row = self.ui.packetList.rowCount()
         self.ui.packetList.insertRow(row)
 
+        # protocol
+        protocol = self.getProtocol(packet)
+        self.ui.packetList.setItem(row, 2, QTItem(str(protocol[0])))
+
         # source & destination
-        if IP in packet:
-            src = packet[IP].src
-            dst = packet[IP].dst
-        else:
+        if protocol == 'ARP' or protocol == 'Ether':
             src = packet.src
             dst = packet.dst
-
+        else:
+            if 'IPv6' in packet:
+                src = packet['IPv6'].src
+                dst = packet['IPv6'].dst
+            elif 'IP' in packet:
+                src = packet['IP'].src
+                dst = packet['IP'].dst
         self.ui.packetList.setItem(row, 0, QTItem(src))
         self.ui.packetList.setItem(row, 1, QTItem(dst))
-
-        # protocol
-        layer = None
-        for var in self.getPacketLayers(packet):
-            if not isinstance(var, (Padding, Raw)):
-                layer = var
-
-        protocol = layer.name
-        self.ui.packetList.setItem(row, 2, QTItem(str(protocol)))
 
         # length
         length = f"{len(packet)}"
@@ -102,19 +112,58 @@ class MainPage(QMainWindow):
         item.packet = packet
         self.ui.packetList.setItem(row, 4, item)
 
-    def getPacketLayers(self, packet):
-        count = 0
+    def getProtocol(self, packet):
+        # packet.show()
+        proto_list = ['TCP', 'UDP', 'ICMP', 'IPv6', 'IP', 'ARP', 'Ether', 'Unknown']
+        protocol = []
+        for proto in proto_list:
+            if proto in packet:
+                protocol.append(proto)
+        return protocol
+
+    def getAllLayers(self, packet):
+        counter = 0
         while True:
-            layer = packet.getlayer(count)
+            layer = packet.getlayer(counter)
             if layer is None:
                 break
             yield layer
-            count += 1
-    def handelPacket(self, packet):  # p捕获到的数据包
+            counter += 1
+
+    def handelPacket(self, packet):
         # packet.show()
         self.queue.put(packet)
         self.showPacketSig.recv.emit('show packet list')
 
+    def loadContent(self, item, column):
+        print('packetOverview.itemClicked')
+        if not hasattr(item, 'layer'):
+            return
+        layer = item.layer
+        self.ui.packetContent.setText(hexdump(layer, dump=True))
+
+    def loadOverview(self, x, y):
+        print('packetList.itemClicked')
+        print(x, y)
+        item = self.ui.packetList.item(x, 4)
+        if not hasattr(item, 'packet'):
+            return
+        packet = item.packet
+        packet.show()
+        self.ui.packetContent.setText(hexdump(packet, dump=True))
+
+        self.ui.packetOverview.clear()
+        for layer in self.getAllLayers(packet):
+            item = QRItem(self.ui.packetOverview)
+            item.layer = layer
+            item.setText(0, layer.name)
+            # self.ui.packetOverview.addTopLevelItem(item)
+
+            for name, value in layer.fields.items():
+                child = QRItem(item)
+                child.setText(0, f"{name}: {value}")
+
+        # self.ui.packetOverview.expandAll()
     def startSniff(self):
         print('start sniff')
         # iface = self.getIface()
@@ -141,10 +190,13 @@ class MainPage(QMainWindow):
 
     def clearList(self):
         print('clear all')
+
+        if self.queue:
+            self.queue.queue.clear()
+            self.queue = Queue()
+
         self.ui.resetButton.setEnabled(False)
-        self.ui.packetList.clear()
         self.ui.packetList.setRowCount(0)
-        self.ui.packetInfo.clear()
 
 def main():
     app = QApplication(sys.argv)
