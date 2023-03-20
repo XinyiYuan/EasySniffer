@@ -37,6 +37,11 @@ class MainPage(QMainWindow):
         self.showPacketSig = Signal()
         self.showPacketSig.recv.connect(self.showPacket)
 
+        self.ui.packetList.setColumnWidth(0, 150)
+        self.ui.packetList.setColumnWidth(1, 150)
+        self.ui.packetList.setColumnWidth(2, 100)
+        self.ui.packetList.setColumnWidth(3, 80)
+        self.ui.packetList.setColumnWidth(4, 600)
         # select a cell in packetList
         # then display the content of each layer
         # in packetOverview (treeWidget)
@@ -136,7 +141,7 @@ class MainPage(QMainWindow):
         self.showPacketSig.recv.emit('show packet list')
 
     def loadContent(self, item, column):
-        print('packetOverview.itemClicked')
+        # print('packetOverview.itemClicked')
         if not hasattr(item, 'layer'):
             return
         layer = item.layer
@@ -144,12 +149,12 @@ class MainPage(QMainWindow):
 
     def loadOverview(self, x, y):
         print('packetList.itemClicked')
-        print(x, y)
+        # print(x, y)
         item = self.ui.packetList.item(x, 4)
         if not hasattr(item, 'packet'):
             return
         packet = item.packet
-        packet.show()
+        # packet.show()
         self.ui.packetContent.setText(hexdump(packet, dump=True))
 
         self.ui.packetOverview.clear()
