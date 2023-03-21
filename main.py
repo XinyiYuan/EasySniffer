@@ -33,6 +33,7 @@ class MainPage(QMainWindow):
 
         self.ui.filterText.editingFinished.connect(self.getFilter)
         self.ui.filterText.setEnabled(True)
+        self.ui.filterText.setPlaceholderText('Filter')
 
         self.showPacketSig = Signal()
         self.showPacketSig.recv.connect(self.showPacket)
@@ -72,8 +73,22 @@ class MainPage(QMainWindow):
 
         try:
             compile_filter(filter_exp=filter)
+            if self.queue:
+                self.queue.queue.clear()
+                self.queue = Queue()
+
             self.ui.filterText.setStyleSheet('QLineEdit { background-color: rgb(33, 186, 69);}')
             self.ui.startButton.setEnabled(True)
+            self.ui.resetButton.setEnabled(False)
+
+            self.ui.packetList.setRowCount(0)
+            self.ui.packetList.clearContents()
+            # Notice that clear() clears ALL information in the table,
+            # INCLUDING header of the table
+            # clearContents() only clears contents of the table
+
+            self.ui.packetOverview.clear()
+            self.ui.packetContent.clear()
         except Exception:
             self.ui.startButton.setEnabled(False)
             self.ui.filterText.setStyleSheet('QLineEdit { background-color: rgb(219, 40, 40);}')
@@ -91,7 +106,7 @@ class MainPage(QMainWindow):
 
         # protocol
         protocol = self.getProtocol(packet)
-        self.ui.packetList.setItem(row, 2, QTItem(str(protocol[0])))
+        self.ui.packetList.setItem(row, 2, QTItem(str(protocol)))
 
         # source & destination
         if protocol == 'ARP' or protocol == 'Ether':
@@ -104,6 +119,9 @@ class MainPage(QMainWindow):
             elif 'IP' in packet:
                 src = packet['IP'].src
                 dst = packet['IP'].dst
+            else:
+                src = packet.src
+                dst = packet.dst
         self.ui.packetList.setItem(row, 0, QTItem(src))
         self.ui.packetList.setItem(row, 1, QTItem(dst))
 
@@ -120,11 +138,10 @@ class MainPage(QMainWindow):
     def getProtocol(self, packet):
         # packet.show()
         proto_list = ['TCP', 'UDP', 'ICMP', 'IPv6', 'IP', 'ARP', 'Ether', 'Unknown']
-        protocol = []
         for proto in proto_list:
             if proto in packet:
-                protocol.append(proto)
-        return protocol
+                protocol = proto
+                return protocol
 
     def getAllLayers(self, packet):
         counter = 0
@@ -148,7 +165,7 @@ class MainPage(QMainWindow):
         self.ui.packetContent.setText(hexdump(layer, dump=True))
 
     def loadOverview(self, x, y):
-        print('packetList.itemClicked')
+        # print('packetList.itemClicked')
         # print(x, y)
         item = self.ui.packetList.item(x, 4)
         if not hasattr(item, 'packet'):
@@ -172,8 +189,9 @@ class MainPage(QMainWindow):
     def startSniff(self):
         print('start sniff')
         # iface = self.getIface()
-        # filter = self.ui.filterText.text()
-        self.sniffer = AsyncSniffer(filter=None, prn=self.handelPacket, count=0)
+        filter = self.ui.filterText.text()
+        print('filter', str(filter))
+        self.sniffer = AsyncSniffer(filter=filter, prn=self.handelPacket, count=0)
         self.sniffer.start()
 
         self.ui.filterText.setEnabled(False)

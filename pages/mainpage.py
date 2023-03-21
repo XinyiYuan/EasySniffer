@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1280, 681)
+        MainWindow.resize(1280, 680)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.layoutWidget = QtWidgets.QWidget(self.centralwidget)
@@ -24,6 +24,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.filterText = QtWidgets.QLineEdit(self.layoutWidget)
+        self.filterText.setText("")
         self.filterText.setObjectName("filterText")
         self.horizontalLayout.addWidget(self.filterText)
         self.startButton = QtWidgets.QPushButton(self.layoutWidget)
@@ -81,7 +82,6 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.filterText.setText(_translate("MainWindow", "filter:"))
         self.startButton.setText(_translate("MainWindow", "Start"))
         self.stopButton.setText(_translate("MainWindow", "Stop"))
         self.resetButton.setText(_translate("MainWindow", "Reset"))
