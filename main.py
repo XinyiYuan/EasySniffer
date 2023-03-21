@@ -81,6 +81,10 @@ class MainPage(QMainWindow):
             self.ui.startButton.setEnabled(True)
             self.ui.resetButton.setEnabled(False)
 
+            # clear all
+            if self.queue:
+                self.queue.queue.clear()
+                self.queue = Queue()
             self.ui.packetList.setRowCount(0)
             self.ui.packetList.clearContents()
             # Notice that clear() clears ALL information in the table,
@@ -190,7 +194,7 @@ class MainPage(QMainWindow):
         print('start sniff')
         # iface = self.getIface()
         filter = self.ui.filterText.text()
-        print('filter', str(filter))
+        print('filter:', str(filter))
         self.sniffer = AsyncSniffer(filter=filter, prn=self.handelPacket, count=0)
         self.sniffer.start()
 
@@ -202,7 +206,7 @@ class MainPage(QMainWindow):
     def stopSniff(self):
         print('stop sniff')
         if self.sniffer:
-            self.sniffer.stop()
+            # self.sniffer.stop()
             self.sniffer = None
             self.ui.filterText.setEnabled(True)
             self.ui.startButton.setEnabled(True)
