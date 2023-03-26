@@ -78,7 +78,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 ### 网络抓包和解析
 
-采用xxx库，安装。。。
+采用scapy库。
 
 ## 开发过程
 

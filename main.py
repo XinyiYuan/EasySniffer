@@ -206,7 +206,7 @@ class MainPage(QMainWindow):
     def stopSniff(self):
         print('stop sniff')
         if self.sniffer:
-            # self.sniffer.stop()
+            self.sniffer.stop()
             self.sniffer = None
             self.ui.filterText.setEnabled(True)
             self.ui.startButton.setEnabled(True)
