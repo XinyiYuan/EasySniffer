@@ -52,7 +52,8 @@ class MainPage(QMainWindow):
         # select an item in packetOverview
         # then display the original hexadecimal content of the selected layer
         # in packetContent (QTextEdit)
-        self.ui.packetOverview.itemClicked.connect(self.loadContent)
+        # self.ui.packetOverview.itemClicked.connect(self.loadContent)
+        self.ui.packetList.cellClicked.connect(self.loadContent)
 
         self.ui.packetContent.setPlaceholderText("Packet Content")
 
